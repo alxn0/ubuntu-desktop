@@ -1,0 +1,4 @@
+#!/bin/bash
+echo -e "\n-- Installing Z"
+curl -sSL https://raw.githubusercontent.com/rupa/z/master/z.sh -o "$HOME/.z.sh"
+

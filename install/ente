@@ -1,0 +1,6 @@
+#!/bin/bash
+echo -e "\n-- Installing Ente --\n"
+curl -LO "https://github.com/ente-io/photos-desktop/releases/download/v1.7.11/ente-1.7.11-amd64.deb"
+sudo dpkg -i "ente-1.7.11-amd64.deb"
+rm "ente-1.7.11-amd64.deb" 
+

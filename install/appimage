@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo -e "\n-- Installing AppImages --\n"
+
+# Because it doesn't work without
+sudo apt install libfuse2 -y
+
+# Create directory
+mkdir "$HOME/AppImages"
+
+# AppImage Launcher
+curl -LO https://github.com/TheAssassin/AppImageLauncher/releases/download/v2.2.0/appimagelauncher-lite-2.2.0-travis995-0f91801-x86_64.AppImage
+mv "$PWD/appimagelauncher-lite-2.2.0-travis995-0f91801-x86_64.AppImage" \
+  "$HOME/AppImages/appimagelauncher"
+chmod +x "$HOME/AppImages/appimagelauncher"
+"$HOME/AppImages/appimagelauncher install"

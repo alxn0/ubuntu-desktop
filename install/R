@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo -e "\n-- Installing R --\n"
+
+## update indices
+sudo apt update -qq
+
+# Install R
+sudo apt install --no-install-recommends r-base -y
+sudo apt install r-base-dev -y
+
+# Install radian (if python's installed)
+if command -v "pipx" &> /dev/null
+then
+  pipx install radian --quiet
+fi
+
+# Install ipython R kernel
+sudo apt install r-cran-irkernel -qq -y

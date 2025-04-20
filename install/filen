@@ -1,0 +1,6 @@
+#!/bin/bash
+echo -e "\n-- Installing Filen --\n"
+curl -LO "https://cdn.filen.io/@filen/desktop/release/latest/Filen_linux_amd64.deb"
+sudo dpkg -i Filen_linux_amd64.deb
+rm Filen_linux_amd64.deb
+

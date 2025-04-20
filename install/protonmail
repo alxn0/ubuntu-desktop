@@ -1,0 +1,6 @@
+#!/bin/bash
+echo -e "\n-- Installing Proton Mail desktop --" 
+curl -LO https://proton.me/download/mail/linux/ProtonMail-desktop-beta.deb
+sudo dpkg -i ProtonMail-desktop-beta.deb
+rm ProtonMail-desktop-beta.deb
+

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+echo -e "\n --Installing fonts... \n"
+
+# Create folders in .local for truetype and opentype fonts
+if [ ! -d $HOME/.local/share/fonts/truetype ]
+then
+  echo "Creating ~/.local/share/fonts/truetype"
+  mkdir -p $HOME/.local/share/fonts/truetype
+fi
+
+if [ ! -d $HOME/.local/share/fonts/opentype ]
+then
+  echo "Creating ~/.local/share/fonts/opentype"
+  mkdir -p $HOME/.local/share/fonts/opentype
+fi
+
+# Install fonts
+echo "Installing truetype fonts..."
+sudo find $PWD/Fonts -name "*.ttf" -exec cp "{}" ~/.local/share/fonts/truetype/ ";"
+
+echo "Installing opentype fonts..."
+sudo find $PWD/Fonts -name "*.otf" -exec cp "{}" ~/.local/share/fonts/opentype/ ";" 
+
+# Clear and restart cache
+echo "Clear and restart cache...."
+fc-cache -f 
+echo "Clear and restart cache....done!"
+

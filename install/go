@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo -e "\n-- Installing Go...\n"
+
+# Simple script to install go
+# Assume linux with Intel architecture
+
+VERSION=1.23.8
+FILE=go$VERSION.linux-amd64.tar.gz
+
+# Downloading GO
+curl -sSLO https://dl.google.com/go/$FILE
+
+# Remove previous go installation and install new one
+sudo rm -rf /usr/local/go 
+sudo tar -C /usr/local -xzf $FILE
+rm $FILE
+
+# Export PATH
+export PATH=$PATH:/usr/local/go/bin
+
+# Test Go version
+go version

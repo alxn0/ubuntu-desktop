@@ -1,0 +1,105 @@
+#!/bin/bash
+
+# Utility script to install all the necessary applications and
+# configuration files for a new ubuntu workstation.
+# Author: Alexandre Naud
+
+# Create function that automatize
+# the installation using scripts in the install directory
+function install() {
+  local script="$1"
+  if [[ -f "$PWD/install/$script" ]]; then
+    bash "$PWD/install/$script"
+  else
+    echo "Script $script not found."
+  fi
+}
+
+# Updating repository and upgrading system
+echo -e "\n-- Update and upgrade" 
+sudo apt update
+sudo apt upgrade  -y
+
+# Install terminal utilities and system tools
+echo -e "\n-- Various app from debian package manager --\n"
+sudo apt install alacritty -y     # Terminal emulator
+sudo apt install vim -y           # Text editor
+sudo apt install git -y           # Version control
+sudo apt install tmux -y          # Terminal multiplexer
+sudo apt install xclip -y         # Clipboard manager
+sudo apt install tree -y          # File tree  
+sudo apt install entr -y          # Run command when file changes
+sudo apt install ripgrep -y       # Search tool
+sudo apt install curl -y          # Command line tool for transferring data
+sudo apt install htop -y          # Process viewer
+sudo apt install ddgr -y          # DuckDuckGo search tool
+sudo apt install podman -y        # Container engine
+sudo apt install age -y           # File encryption tool
+sudo apt install shellcheck -y    # Shell script analysis tool
+sudo apt install rpi-imager -y    # Raspberry Pi imager
+
+# Programming language 
+echo -e "\n-- Installing programming languages"
+install go                        # Go programming language
+install nodejs                    # Node.js
+
+# Pipx
+echo -e "\n-- Installing pipx --\n"
+sudo apt install pipx -y          # Run python applications in isolated environments
+pipx ensurepath                   # Ensure pipx is in PATH
+
+# Install python packages
+echo -e "\n-- Installing python packages --\n"
+pipx install python-lsp-server    # Python language server
+pipx install ruff                 # Python linter
+pipx install tldr                 # TLDR pages
+
+# Install go binaries
+go install github.com/charmbracelet/mods@latest             # AI on the command line
+go install github.com/sigstore/cosign/v2/cmd/cosign@latest  # Verification, for sops
+
+# Install from flatpak
+echo -e "\n-- Installing flatpak --\n"          
+sudo apt install flatpak -y
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+echo -e "\n-- Installing various app from flatpak --\n"
+flatpak install org.zotero.Zotero -y                               # Reference manager
+flatpak install org.inkscape.Inkscape -y                           # Vector graphics editor
+flatpak install org.gimp.GIMP -y                                   # Image editor
+flatpak install org.keepassxc.KeePassXC -y                         # Password manager
+flatpak install com.slack.Slack -y                                 # Team communication
+flatpak install org.signal.Signal -y                               # messaging
+flatpak install org.videolan.VLC -y                                # Video player
+flatpak install org.qbittorrent.qBittorrent -y                     # Torrent client
+flatpak install io.github.ungoogled_software.ungoogled_chromium    # Web browser (mostly for Google Workspace)
+
+# (Semi) complex installations
+echo -e "\n-- Installing applications from source --\n"
+install fzf                                     # Fuzzy finder        
+install sops                                    # Secrets management
+install passage                                 # Password manager
+install gh                                      # GitHub CLI
+install miniconda3                              # Mini Anaconda distribution
+install filen                                   # Cloud storage
+install ente                                    # Photo storage
+install protonmail                              # email
+
+# Install fonts
+echo -e "\n-- Installing fonts --\n"
+install fonts                                  
+
+# Setup AppImages folder and install AppImage Launcher
+echo -e "\n-- Installing AppImage Launcher --\n"
+install appimage
+
+# Configuring Ubuntu and symlinking config files
+echo -e "\n-- Configurations --\n"
+"$PWD/configs/setup"
+
+# Remove unecessary libraries
+echo -e "\n-- Cleaning up --\n"
+sudo apt autoremove -y
+
+# Done!
+echo -e "\n-- Done --\n"

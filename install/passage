@@ -1,0 +1,7 @@
+#!/bin/bash
+echo -e "\n-- Installing Passage CLI --\n"
+git clone https://github.com/FiloSottile/passage
+cd passage || exit
+sudo make install
+cd ..
+sudo rm -rf passage

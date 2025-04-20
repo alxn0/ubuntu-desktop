@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Link configurations
+ln -sf "$PWD/appimagelauncher.cfg" "$HOME/.config/appimagelauncher.cfg"
+
