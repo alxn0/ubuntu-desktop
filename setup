@@ -36,12 +36,14 @@ sudo apt install ddgr -y          # DuckDuckGo search tool
 sudo apt install podman -y        # Container engine
 sudo apt install age -y           # File encryption tool
 sudo apt install shellcheck -y    # Shell script analysis tool
-sudo apt install rpi-imager -y    # Raspberry Pi imager
+sudo apt install make -y          # Build automation tool
 
-# Programming language 
+# Programming language
 echo -e "\n-- Installing programming languages"
 install go                        # Go programming language
 install nodejs                    # Node.js
+
+# TODO: Add to path so that go install and npm install work
 
 # Pipx
 echo -e "\n-- Installing pipx --\n"
@@ -53,10 +55,23 @@ echo -e "\n-- Installing python packages --\n"
 pipx install python-lsp-server    # Python language server
 pipx install ruff                 # Python linter
 pipx install tldr                 # TLDR pages
+pipx install llm                  # Command line interface for large language models
+pipx install uv                   # Python package and project manager
+
+# Install llm plugins
+echo -e "\n-- Installing llm plugins --\n"
+llm install llm-gemini
+llm install llm-anthropic
 
 # Install go binaries
+echo -e "\n-- Installing go binaries --\n"
 go install github.com/charmbracelet/mods@latest             # AI on the command line
 go install github.com/sigstore/cosign/v2/cmd/cosign@latest  # Verification, for sops
+go install github.com/chambracelet/glow@latest              # Markdown viewer
+
+# Install from nodejs
+echo -e "\n-- Installing nodejs packages --\n"
+npm install -g @anthropic-ai/claude-code                    # Coding agent
 
 # Install from flatpak
 echo -e "\n-- Installing flatpak --\n"          
@@ -84,6 +99,7 @@ install miniconda3                              # Mini Anaconda distribution
 install filen                                   # Cloud storage
 install ente                                    # Photo storage
 install protonmail                              # email
+install z                                       # Cd to most used directory
 
 # Install fonts
 echo -e "\n-- Installing fonts --\n"
