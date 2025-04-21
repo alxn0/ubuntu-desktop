@@ -18,3 +18,11 @@ Clone the repo, run `./setup`
 The script will prompt you at some point, so it is not fully autonomus.
 Configurations for some tools are in `alxn0/dotfiles`
 
+## Todo
+
+- [ ] Add go and npm to path in setup
+- [ ] Explore if filen CLI can automaticaly set sync
+- [ ] Gnome configs (keybindings and dock)
+- [ ] Print what remaining to do at the end of ./setup
+- [ ] See why the last line of miniconda3/setup does not work (stop
+  source base when opening terminal)
