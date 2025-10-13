@@ -87,7 +87,7 @@ flatpak install com.slack.Slack -y                                 # Team commun
 flatpak install org.signal.Signal -y                               # messaging
 flatpak install org.videolan.VLC -y                                # Video player
 flatpak install org.qbittorrent.qBittorrent -y                     # Torrent client
-flatpak install io.github.ungoogled_software.ungoogled_chromium    # Web browser (mostly for Google Workspace)
+flatpak install io.github.ungoogled_software.ungoogled_chromium -y    # Web browser (mostly for Google Workspace)
 
 # (Semi) complex installations
 echo -e "\n-- Installing applications from source --\n"
