@@ -1,4 +1,5 @@
 #!/bin/bash
-echo -e "\n-- Install fzf --\n"
+# Install fzf fuzzy finder
+
 git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
-"$HOME/.fzf/install"
+"$HOME/.fzf/install" --all

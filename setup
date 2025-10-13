@@ -4,118 +4,165 @@
 # configuration files for a new ubuntu workstation.
 # Author: Alexandre Naud
 
+# Source logging utilities
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "$SCRIPT_DIR/lib/logging.sh"
+
 # Create function that automatize
 # the installation using scripts in the install directory
 function install() {
   local script="$1"
-  if [[ -f "$PWD/install/$script" ]]; then
-    bash "$PWD/install/$script"
+  local description="$2"
+
+  if [[ -f "$SCRIPT_DIR/install/$script" ]]; then
+    status_info "$description"
+    if bash "$SCRIPT_DIR/install/$script"; then
+      status_ok "$description"
+    else
+      status_fail "$description"
+      return 1
+    fi
   else
-    echo "Script $script not found."
+    status_fail "$description (script not found)"
+    return 1
   fi
 }
 
+# Print setup header
+echo "" >&3
+echo "Ubuntu Workstation Setup" >&3
+echo "Log file: $LOGFILE" >&3
+echo "" >&3
+
 # Updating repository and upgrading system
-echo -e "\n-- Update and upgrade" 
-sudo apt update
-sudo apt upgrade  -y
+section "System Update"
+run_task "Updating package lists" sudo apt update
+run_task "Upgrading system packages" sudo apt upgrade -y
 
 # Install terminal utilities and system tools
-echo -e "\n-- Various app from debian package manager --\n"
-sudo apt install alacritty -y     # Terminal emulator
-sudo apt install vim -y           # Text editor
-sudo apt install git -y           # Version control
-sudo apt install tmux -y          # Terminal multiplexer
-sudo apt install xclip -y         # Clipboard manager
-sudo apt install tree -y          # File tree  
-sudo apt install entr -y          # Run command when file changes
-sudo apt install ripgrep -y       # Search tool
-sudo apt install curl -y          # Command line tool for transferring data
-sudo apt install htop -y          # Process viewer
-sudo apt install ddgr -y          # DuckDuckGo search tool
-sudo apt install podman -y        # Container engine
-sudo apt install age -y           # File encryption tool
-sudo apt install shellcheck -y    # Shell script analysis tool
-sudo apt install make -y          # Build automation tool
+section "Terminal Utilities"
+declare -A apt_packages=(
+  ["alacritty"]="Terminal emulator"
+  ["vim"]="Text editor"
+  ["git"]="Version control"
+  ["tmux"]="Terminal multiplexer"
+  ["xclip"]="Clipboard manager"
+  ["tree"]="File tree viewer"
+  ["entr"]="File watcher"
+  ["ripgrep"]="Search tool"
+  ["curl"]="HTTP client"
+  ["htop"]="Process viewer"
+  ["ddgr"]="DuckDuckGo CLI"
+  ["podman"]="Container engine"
+  ["age"]="File encryption"
+  ["shellcheck"]="Shell script linter"
+  ["make"]="Build automation"
+)
 
-# Programming language
-echo -e "\n-- Installing programming languages"
-install go                        # Go programming language
-install nodejs                    # Node.js
+for package in "${!apt_packages[@]}"; do
+  run_silent "  ├─ $package" sudo apt install "$package" -y
+done
 
-# TODO: Add to path so that go install and npm install work
+# Programming languages
+section "Programming Languages"
+install go "Installing Go"
+install nodejs "Installing Node.js"
+
+# Update PATH for current session
+export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:$HOME/go/bin
+source "$HOME/.nvm/nvm.sh" 2>/dev/null || true
 
 # Pipx
-echo -e "\n-- Installing pipx --\n"
-sudo apt install pipx -y          # Run python applications in isolated environments
-pipx ensurepath                   # Ensure pipx is in PATH
+section "Python Package Manager"
+run_silent "  ├─ pipx" sudo apt install pipx -y
+run_silent "  ├─ Configure pipx PATH" pipx ensurepath --force
 
-# Install python packages
-echo -e "\n-- Installing python packages --\n"
-pipx install python-lsp-server    # Python language server
-pipx install ruff                 # Python linter
-pipx install tldr                 # TLDR pages
-pipx install llm                  # Command line interface for large language models
-pipx install uv                   # Python package and project manager
+# Python packages
+section "Python CLI Tools"
+declare -a pipx_packages=(
+  "python-lsp-server"
+  "ruff"
+  "tldr"
+  "llm"
+  "uv"
+)
 
-# Install llm plugins
-echo -e "\n-- Installing llm plugins --\n"
-llm install llm-gemini
-llm install llm-anthropic
+for package in "${pipx_packages[@]}"; do
+  run_silent "  ├─ $package" pipx install "$package"
+done
 
-# Install go binaries
-echo -e "\n-- Installing go binaries --\n"
-go install github.com/charmbracelet/mods@latest             # AI on the command line
-go install github.com/sigstore/cosign/v2/cmd/cosign@latest  # Verification, for sops
-go install github.com/chambracelet/glow@latest              # Markdown viewer
+# LLM plugins
+section "LLM Plugins"
+run_silent "  ├─ llm-gemini" llm install llm-gemini
+run_silent "  ├─ llm-anthropic" llm install llm-anthropic
 
-# Install from nodejs
-echo -e "\n-- Installing nodejs packages --\n"
-npm install -g @anthropic-ai/claude-code                    # Coding agent
+# Go binaries
+section "Go Binaries"
+run_silent "  ├─ mods" go install github.com/charmbracelet/mods@latest
+run_silent "  ├─ cosign" go install github.com/sigstore/cosign/v2/cmd/cosign@latest
+run_silent "  ├─ glow" go install github.com/charmbracelet/glow@latest
 
-# Install from flatpak
-echo -e "\n-- Installing flatpak --\n"          
-sudo apt install flatpak -y
-flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+# Node.js packages
+section "Node.js Packages"
+run_silent "  ├─ claude-code" npm install -g @anthropic-ai/claude-code
 
-echo -e "\n-- Installing various app from flatpak --\n"
-flatpak install org.zotero.Zotero -y                               # Reference manager
-flatpak install org.inkscape.Inkscape -y                           # Vector graphics editor
-flatpak install org.gimp.GIMP -y                                   # Image editor
-flatpak install org.keepassxc.KeePassXC -y                         # Password manager
-flatpak install com.slack.Slack -y                                 # Team communication
-flatpak install org.signal.Signal -y                               # messaging
-flatpak install org.videolan.VLC -y                                # Video player
-flatpak install org.qbittorrent.qBittorrent -y                     # Torrent client
-flatpak install io.github.ungoogled_software.ungoogled_chromium -y    # Web browser (mostly for Google Workspace)
+# Flatpak
+section "Flatpak"
+run_silent "  ├─ Installing flatpak" sudo apt install flatpak -y
+run_silent "  ├─ Adding flathub repository" flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-# (Semi) complex installations
-echo -e "\n-- Installing applications from source --\n"
-install fzf                                     # Fuzzy finder        
-install sops                                    # Secrets management
-install passage                                 # Password manager
-install gh                                      # GitHub CLI
-install miniconda3                              # Mini Anaconda distribution
-install filen                                   # Cloud storage
-install ente                                    # Photo storage
-install protonmail                              # email
-install z                                       # Cd to most used directory
+section "Flatpak Applications"
+declare -A flatpak_apps=(
+  ["org.zotero.Zotero"]="Zotero"
+  ["org.inkscape.Inkscape"]="Inkscape"
+  ["org.gimp.GIMP"]="GIMP"
+  ["org.keepassxc.KeePassXC"]="KeePassXC"
+  ["com.slack.Slack"]="Slack"
+  ["org.signal.Signal"]="Signal"
+  ["org.videolan.VLC"]="VLC"
+  ["org.qbittorrent.qBittorrent"]="qBittorrent"
+  ["io.github.ungoogled_software.ungoogled_chromium"]="Ungoogled Chromium"
+)
 
-# Install fonts
-echo -e "\n-- Installing fonts --\n"
-install fonts                                  
+for app_id in "${!flatpak_apps[@]}"; do
+  run_silent "  ├─ ${flatpak_apps[$app_id]}" flatpak install "$app_id" -y
+done
 
-# Setup AppImages folder and install AppImage Launcher
-echo -e "\n-- Installing AppImage Launcher --\n"
-install appimage
+# Complex installations
+section "Additional Applications"
+install fzf "Installing fzf (fuzzy finder)"
+install sops "Installing SOPS (secrets management)"
+install passage "Installing Passage (password manager)"
+install gh "Installing GitHub CLI"
+install miniconda3 "Installing Miniconda3"
+install filen "Installing Filen (cloud storage)"
+install ente "Installing Ente (photo storage)"
+install protonmail "Installing Proton Mail"
+install z "Installing z (directory jumper)"
 
-# Configuring Ubuntu and symlinking config files
-echo -e "\n-- Configurations --\n"
-"$PWD/configs/setup"
+# Fonts
+section "Fonts"
+install fonts "Installing fonts"
 
-# Remove unecessary libraries
-echo -e "\n-- Cleaning up --\n"
-sudo apt autoremove -y
+# AppImage support
+section "AppImage Support"
+install appimage "Installing AppImage Launcher"
 
-# Done!
-echo -e "\n-- Done --\n"
+# Configuration
+section "Configuration"
+run_task "Applying configurations" "$SCRIPT_DIR/configs/setup"
+
+# Cleanup
+section "Cleanup"
+run_task "Removing unnecessary packages" sudo apt autoremove -y
+
+# Done
+echo "" >&3
+status_ok "Setup complete!"
+echo "" >&3
+echo "Full log saved to: $LOGFILE" >&3
+echo "" >&3
+
+# Restore original stdout/stderr
+exec 1>&3 2>&4

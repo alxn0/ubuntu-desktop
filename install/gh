@@ -1,15 +1,14 @@
 #!/bin/bash
+# Install GitHub CLI
 
-echo -e "\n-- Installing GitHub CLI --\n"
-
-# Copy keyring
+# Add GitHub CLI GPG key
 curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | \
   sudo dd of=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg
 
-# Add  repo to apt
+# Add GitHub CLI repository
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | \
   sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
 
-# Install
+# Update and install
 sudo apt update
-sudo apt install gh
+sudo apt install gh -y

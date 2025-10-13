@@ -14,13 +14,15 @@ Last tested on ubuntu 25.04, funny little penguin.
 ## Instalations
 Clone the repo, run `./setup`
 
+The script is fully automated and requires no user interaction.
+
 ## Note
-The script will prompt you at some point, so it is not fully autonomus.
 Configurations for some tools are in `alxn0/dotfiles`
 
 ## Todo
 
-- [ ] Add go and npm to path in setup
+- [ ] Add go, npm llm to path in setup so that later install find
+  command.
 - [ ] Explore if filen CLI can automaticaly set sync
 - [ ] Gnome configs (keybindings and dock)
 - [ ] Print what remaining to do at the end of ./setup

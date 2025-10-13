@@ -1,22 +1,24 @@
 #!/bin/bash
+# Install SOPS with signature verification
 
-echo -e "\n-- Installing sops --\n"
+VERSION=3.9.3
 
-# Install sops
-## Download and install sops
-curl -sSLO "https://github.com/getsops/sops/releases/download/v3.9.3/sops-v3.9.3.linux.amd64"
-sudo mv "sops-v3.9.3.linux.amd64" "/usr/local/bin/sops"
+# Download and install sops binary
+curl -sSLO "https://github.com/getsops/sops/releases/download/v${VERSION}/sops-v${VERSION}.linux.amd64"
+sudo mv "sops-v${VERSION}.linux.amd64" "/usr/local/bin/sops"
 sudo chmod +x "/usr/local/bin/sops"
 
-## Verify checksums
-curl -sSLO https://github.com/getsops/sops/releases/download/v3.9.3/sops-v3.9.3.checksums.txt
-curl -sSLO https://github.com/getsops/sops/releases/download/v3.9.3/sops-v3.9.3.checksums.pem
-curl -sSLO https://github.com/getsops/sops/releases/download/v3.9.3/sops-v3.9.3.checksums.sig
+# Download verification files
+curl -sSLO "https://github.com/getsops/sops/releases/download/v${VERSION}/sops-v${VERSION}.checksums.txt"
+curl -sSLO "https://github.com/getsops/sops/releases/download/v${VERSION}/sops-v${VERSION}.checksums.pem"
+curl -sSLO "https://github.com/getsops/sops/releases/download/v${VERSION}/sops-v${VERSION}.checksums.sig"
 
-cosign verify-blob sops-v3.9.3.checksums.txt \
-  --certificate sops-v3.9.3.checksums.pem \
-  --signature sops-v3.9.3.checksums.sig \
+# Verify checksums with cosign
+cosign verify-blob "sops-v${VERSION}.checksums.txt" \
+  --certificate "sops-v${VERSION}.checksums.pem" \
+  --signature "sops-v${VERSION}.checksums.sig" \
   --certificate-identity-regexp=https://github.com/getsops \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com
 
-rm sops-v3.9.3.checksums.txt sops-v3.9.3.checksums.pem sops-v3.9.3.checksums.sig
+# Clean up verification files
+rm "sops-v${VERSION}.checksums.txt" "sops-v${VERSION}.checksums.pem" "sops-v${VERSION}.checksums.sig"

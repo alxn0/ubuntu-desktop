@@ -13,4 +13,4 @@ curl -LO https://github.com/TheAssassin/AppImageLauncher/releases/download/v2.2.
 mv "$PWD/appimagelauncher-lite-2.2.0-travis995-0f91801-x86_64.AppImage" \
   "$HOME/AppImages/appimagelauncher"
 chmod +x "$HOME/AppImages/appimagelauncher"
-"$HOME/AppImages/appimagelauncher install"
+"$HOME/AppImages/appimagelauncher" install
