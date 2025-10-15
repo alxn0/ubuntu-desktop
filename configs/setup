@@ -3,3 +3,6 @@
 # Link configurations
 ln -sf "$PWD/appimagelauncher.cfg" "$HOME/.config/appimagelauncher.cfg"
 
+# Apply GNOME configuration
+bash "$PWD/gnome"
+

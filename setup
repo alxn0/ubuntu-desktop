@@ -57,6 +57,7 @@ declare -A apt_packages=(
   ["age"]="File encryption"
   ["shellcheck"]="Shell script linter"
   ["make"]="Build automation"
+  ["gnome-shell-extensions"]="GNOME extensions support"
 )
 
 for package in "${!apt_packages[@]}"; do

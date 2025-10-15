@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# GNOME Desktop Configuration
+# Configures GNOME Shell settings, extensions, and keybindings
+
+echo "Configuring GNOME settings..."
+
+# Disable Ubuntu Dock extension if it exists (vanilla GNOME dock is enabled by default)
+if gnome-extensions list | grep -q "ubuntu-dock@ubuntu.com"; then
+  gnome-extensions disable ubuntu-dock@ubuntu.com
+fi
+
+# Set custom keybindings
+# First, set the custom keybindings list
+CUSTOM_KEYBINDINGS=(
+  '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/'
+  '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/'
+)
+
+# Set the custom keybindings list
+gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['${CUSTOM_KEYBINDINGS[0]}', '${CUSTOM_KEYBINDINGS[1]}']"
+
+# Keybinding for Alacritty (Super+T)
+gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ name 'Alacritty'
+gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ command 'alacritty'
+gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ binding '<Super>t'
+
+# Keybinding for LibreWolf (Super+B)
+gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/ name 'LibreWolf'
+gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/ command 'librewolf'
+gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/ binding '<Super>b'
+
+echo "GNOME configuration complete!"
