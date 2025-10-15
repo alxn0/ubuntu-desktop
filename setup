@@ -68,6 +68,7 @@ section "Programming Languages"
 install go "Installing Go"
 install nodejs "Installing Node.js"
 install R "Installing R"
+install rust "Installing Rust"
 
 # Update PATH for current session
 export PATH=$PATH:/usr/local/go/bin
