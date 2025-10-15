@@ -138,7 +138,7 @@ install fzf "Installing fzf (fuzzy finder)"
 install sops "Installing SOPS (secrets management)"
 install passage "Installing Passage (password manager)"
 install gh "Installing GitHub CLI"
-install miniconda3 "Installing Miniconda3"
+#install miniconda3 "Installing Miniconda3"
 install filen "Installing Filen (cloud storage)"
 install ente "Installing Ente (photo storage)"
 install protonmail "Installing Proton Mail"
@@ -159,6 +159,15 @@ run_task "Applying configurations" "$SCRIPT_DIR/configs/setup"
 # Cleanup
 section "Cleanup"
 run_task "Removing unnecessary packages" sudo apt autoremove -y
+
+# Post-setup manual steps
+section "Post-Setup Messages"
+post_message "Authenticate GitHub CLI: run 'gh auth login'"
+post_message "Configure Filen: open application and sign in"
+post_message "Configure Ente: open application and sign in"
+post_message "Configure Proton Mail: open application and sign in"
+post_message "Download Executor GNOME extension from extensions.gnome.org"
+post_message "Configure Executor: add 'zeit track' command"
 
 # Done
 echo "" >&3

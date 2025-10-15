@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Test script to demonstrate logging.sh display functions
+
+# Source logging utilities
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+source "$SCRIPT_DIR/lib/logging.sh"
+
+# Test all status types
+section "Status Display Types"
+status_ok "This is a success message"
+status_fail "This is a failure message"
+status_info "This is an info message"
+status_skip "This is a skip message"
+
+# Test with list items
+section "List Items"
+status_ok "  ├─ Item one"
+status_ok "  ├─ Item two"
+status_skip "  ├─ Item three"
+status_fail "  ├─ Item four"
+
+# Post-setup messages
+section "Post-Setup Messages"
+post_message "First manual step to complete"
+post_message "Second manual step to complete"
+post_message "Third manual step to complete"
+
+# Done
+echo "" >&3
+status_ok "Test complete!"
+echo "" >&3
+
+# Restore original stdout/stderr
+exec 1>&3 2>&4

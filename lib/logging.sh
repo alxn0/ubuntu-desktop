@@ -85,6 +85,13 @@ section() {
   echo "==> $1" >> "$LOGFILE"
 }
 
+# Post-setup message - prints a checkbox item
+# Usage: post_message "Your message here"
+post_message() {
+  echo "  [ ] $1" >&3
+  echo "  [ ] $1" >> "$LOGFILE"
+}
+
 # Export functions so they're available in subscripts
 export -f status_ok
 export -f status_fail
@@ -93,3 +100,4 @@ export -f status_skip
 export -f run_task
 export -f run_silent
 export -f section
+export -f post_message
