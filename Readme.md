@@ -21,10 +21,6 @@ Configurations for some tools are in `alxn0/dotfiles`
 
 ## Todo
 
-- [ ] Add go, npm llm to path in setup so that later install find
-  command.
 - [ ] Explore if filen CLI can automaticaly set sync
 - [ ] Gnome configs (keybindings and dock)
 - [ ] Print what remaining to do at the end of ./setup
-- [ ] See why the last line of miniconda3/setup does not work (stop
-  source base when opening terminal)
